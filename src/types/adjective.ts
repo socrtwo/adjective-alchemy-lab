@@ -6,7 +6,8 @@ export type AdjectiveCategory =
   | 'color' 
   | 'origin' 
   | 'material' 
-  | 'purpose';
+  | 'purpose'
+  | 'participle';
 
 export type AdverbCategory = 
   | 'manner'
@@ -44,6 +45,7 @@ export const CATEGORY_ORDER: AdjectiveCategory[] = [
   'color',
   'origin',
   'material',
+  'participle',
   'purpose'
 ];
 
@@ -63,6 +65,7 @@ export const CATEGORY_LABELS: Record<AdjectiveCategory, string> = {
   color: 'Color',
   origin: 'Origin',
   material: 'Material',
+  participle: 'Participle',
   purpose: 'Purpose'
 };
 
@@ -82,7 +85,8 @@ export const CATEGORY_DESCRIPTIONS: Record<AdjectiveCategory, string> = {
   color: 'red, blue, green, white, black',
   origin: 'American, Chinese, French, British',
   material: 'wooden, plastic, metal, cotton, silk',
-  purpose: 'sleeping (bag), running (shoes), cooking (pot)'
+  participle: 'running (shoes), broken (glass), written (word)',
+  purpose: 'sleeping (bag), cooking (pot)'
 };
 
 export const ADVERB_DESCRIPTIONS: Record<AdverbCategory, string> = {

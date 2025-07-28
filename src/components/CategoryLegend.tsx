@@ -9,6 +9,7 @@ const categoryColorMap: Record<AdjectiveCategory, string> = {
   color: 'bg-category-color',
   origin: 'bg-category-origin',
   material: 'bg-category-material',
+  participle: 'bg-category-participle',
   purpose: 'bg-category-purpose'
 };
 

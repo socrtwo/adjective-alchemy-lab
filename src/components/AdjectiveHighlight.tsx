@@ -15,6 +15,7 @@ const categoryColorMap: Record<AdjectiveCategory, string> = {
   color: 'bg-category-color/20 text-black border-category-color/30',
   origin: 'bg-category-origin/20 text-black border-category-origin/30',
   material: 'bg-category-material/20 text-black border-category-material/30',
+  participle: 'bg-category-participle/20 text-black border-category-participle/30',
   purpose: 'bg-category-purpose/20 text-black border-category-purpose/30'
 };
 
