@@ -28,6 +28,7 @@ interface AnalysisResult {
 
 interface BulkAnalysisResult {
   sentences: AnalysisResult[];
+  originalText?: string;
   summary: {
     totalSentences: number;
     sentencesWithChanges: number;
@@ -88,9 +89,36 @@ export function SentenceAnalyzer() {
     await new Promise(resolve => setTimeout(resolve, 800));
     
     const bulkResult = classifier.analyzeMultipleSentences(bulkText);
+    // Store original text structure for reconstruction
+    (bulkResult as any).originalText = bulkText;
     setBulkResult(bulkResult);
     
     setIsAnalyzing(false);
+  };
+
+  const reconstructCorrectedText = (bulkResult: BulkAnalysisResult) => {
+    if (!bulkResult.originalText) return "";
+    
+    let correctedText = bulkResult.originalText;
+    const sentenceRegex = /[.!?]+/;
+    const sentencesWithPunctuation = bulkResult.originalText.split(/([.!?]+)/);
+    
+    // Rebuild the text maintaining structure
+    const sentences = bulkResult.originalText.split(sentenceRegex)
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+    
+    let result = correctedText;
+    sentences.forEach((originalSentence, index) => {
+      if (index < bulkResult.sentences.length) {
+        const analysisResult = bulkResult.sentences[index];
+        if (analysisResult.changes) {
+          result = result.replace(originalSentence.trim(), analysisResult.corrected);
+        }
+      }
+    });
+    
+    return result;
   };
 
   const highlightAdjectives = (text: string, adjectives: any[]) => {
@@ -336,12 +364,8 @@ export function SentenceAnalyzer() {
               <h3 className="text-lg font-semibold text-foreground">Corrected Text</h3>
             </div>
             <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-              <div className="space-y-2">
-                {bulkResult.sentences.map((sentence, index) => (
-                  <p key={index} className="text-lg leading-relaxed text-green-900">
-                    {sentence.changes ? sentence.corrected : sentence.original}
-                  </p>
-                ))}
+              <div className="whitespace-pre-wrap text-lg leading-relaxed text-green-900">
+                {reconstructCorrectedText(bulkResult)}
               </div>
             </div>
           </Card>
