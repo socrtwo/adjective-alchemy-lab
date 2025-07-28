@@ -122,38 +122,38 @@ export function SentenceAnalyzer() {
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/30 rounded-lg">
         <div className="text-center">
-          <div className="text-3xl font-bold text-scholar-blue">{data.totalAdjectives}</div>
+          <div className="text-5xl font-bold text-scholar-blue">{data.totalAdjectives}</div>
           <div className="text-sm text-muted-foreground">Total Adjectives</div>
         </div>
         <div className="text-center">
-          <div className="text-3xl font-bold text-destructive">{data.reorderedAdjectives}</div>
+          <div className="text-5xl font-bold text-destructive">{data.reorderedAdjectives}</div>
           <div className="text-sm text-muted-foreground">Adj Reordered</div>
         </div>
         <div className="text-center">
-          <div className="text-3xl font-bold text-scholar-blue">{data.adjectiveChains}</div>
+          <div className="text-5xl font-bold text-scholar-blue">{data.adjectiveChains}</div>
           <div className="text-sm text-muted-foreground">Adj Chains</div>
         </div>
         <div className="text-center">
-          <div className="text-3xl font-bold text-destructive">{data.reorderedChains}</div>
+          <div className="text-5xl font-bold text-destructive">{data.reorderedChains}</div>
           <div className="text-sm text-muted-foreground">Chains Fixed</div>
         </div>
       </div>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/30 rounded-lg">
         <div className="text-center">
-          <div className="text-3xl font-bold text-scholar-blue">{data.totalAdverbs || 0}</div>
+          <div className="text-5xl font-bold text-scholar-blue">{data.totalAdverbs || 0}</div>
           <div className="text-sm text-muted-foreground">Total Adverbs</div>
         </div>
         <div className="text-center">
-          <div className="text-3xl font-bold text-destructive">{data.reorderedAdverbs || 0}</div>
+          <div className="text-5xl font-bold text-destructive">{data.reorderedAdverbs || 0}</div>
           <div className="text-sm text-muted-foreground">Adv Reordered</div>
         </div>
         <div className="text-center">
-          <div className="text-3xl font-bold text-scholar-blue">{data.adverbChains || 0}</div>
+          <div className="text-5xl font-bold text-scholar-blue">{data.adverbChains || 0}</div>
           <div className="text-sm text-muted-foreground">Adv Chains</div>
         </div>
         <div className="text-center">
-          <div className="text-3xl font-bold text-destructive">{data.reorderedAdverbChains || 0}</div>
+          <div className="text-5xl font-bold text-destructive">{data.reorderedAdverbChains || 0}</div>
           <div className="text-sm text-muted-foreground">Chains Fixed</div>
         </div>
       </div>
@@ -256,6 +256,16 @@ export function SentenceAnalyzer() {
             )}
           </div>
 
+          {/* Plain Text Corrected Version */}
+          {result.changes && (
+            <div className="space-y-2">
+              <h4 className="font-medium text-foreground">Corrected Text:</h4>
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-lg leading-relaxed text-green-900">{result.corrected}</p>
+              </div>
+            </div>
+          )}
+
           {/* Statistics */}
           {renderStatistics(result)}
 
@@ -319,6 +329,23 @@ export function SentenceAnalyzer() {
       {/* Bulk Analysis Results */}
       {bulkResult && activeTab === 'bulk' && (
         <div className="space-y-6">
+          {/* Plain Text Corrected Version */}
+          <Card className="p-6 shadow-elegant bg-gradient-card animate-fade-in">
+            <div className="flex items-center gap-2 mb-6">
+              <FileText className="w-5 h-5 text-scholar-blue" />
+              <h3 className="text-lg font-semibold text-foreground">Corrected Text</h3>
+            </div>
+            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="space-y-2">
+                {bulkResult.sentences.map((sentence, index) => (
+                  <p key={index} className="text-lg leading-relaxed text-green-900">
+                    {sentence.changes ? sentence.corrected : sentence.original}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </Card>
+
           {/* Summary Statistics */}
           <Card className="p-6 shadow-elegant bg-gradient-card animate-fade-in">
             <div className="flex items-center gap-2 mb-6">
@@ -330,11 +357,11 @@ export function SentenceAnalyzer() {
               {/* General Stats */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-4xl font-bold text-scholar-blue">{bulkResult.summary.totalSentences}</div>
+                  <div className="text-2xl font-bold text-scholar-blue">{bulkResult.summary.totalSentences}</div>
                   <div className="text-sm text-muted-foreground">Sentences</div>
                 </div>
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-4xl font-bold text-destructive">{bulkResult.summary.sentencesWithChanges}</div>
+                  <div className="text-2xl font-bold text-destructive">{bulkResult.summary.sentencesWithChanges}</div>
                   <div className="text-sm text-muted-foreground">Needed Fixing</div>
                 </div>
               </div>
@@ -342,19 +369,19 @@ export function SentenceAnalyzer() {
               {/* Adjectives Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-3xl font-bold text-scholar-blue">{bulkResult.summary.totalAdjectives}</div>
+                  <div className="text-xl font-bold text-scholar-blue">{bulkResult.summary.totalAdjectives}</div>
                   <div className="text-sm text-muted-foreground">Total Adjectives</div>
                 </div>
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-3xl font-bold text-destructive">{bulkResult.summary.totalReorderedAdjectives}</div>
+                  <div className="text-xl font-bold text-destructive">{bulkResult.summary.totalReorderedAdjectives}</div>
                   <div className="text-sm text-muted-foreground">Adj Reordered</div>
                 </div>
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-3xl font-bold text-scholar-blue">{bulkResult.summary.totalChains}</div>
+                  <div className="text-xl font-bold text-scholar-blue">{bulkResult.summary.totalChains}</div>
                   <div className="text-sm text-muted-foreground">Adj Chains</div>
                 </div>
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-3xl font-bold text-destructive">{bulkResult.summary.totalReorderedChains}</div>
+                  <div className="text-xl font-bold text-destructive">{bulkResult.summary.totalReorderedChains}</div>
                   <div className="text-sm text-muted-foreground">Chains Fixed</div>
                 </div>
               </div>
@@ -362,19 +389,19 @@ export function SentenceAnalyzer() {
               {/* Adverbs Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-3xl font-bold text-scholar-blue">{bulkResult.summary.totalAdverbs}</div>
+                  <div className="text-xl font-bold text-scholar-blue">{bulkResult.summary.totalAdverbs}</div>
                   <div className="text-sm text-muted-foreground">Total Adverbs</div>
                 </div>
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-3xl font-bold text-destructive">{bulkResult.summary.totalReorderedAdverbs}</div>
+                  <div className="text-xl font-bold text-destructive">{bulkResult.summary.totalReorderedAdverbs}</div>
                   <div className="text-sm text-muted-foreground">Adv Reordered</div>
                 </div>
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-3xl font-bold text-scholar-blue">{bulkResult.summary.totalAdverbChains}</div>
+                  <div className="text-xl font-bold text-scholar-blue">{bulkResult.summary.totalAdverbChains}</div>
                   <div className="text-sm text-muted-foreground">Adv Chains</div>
                 </div>
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
-                  <div className="text-3xl font-bold text-destructive">{bulkResult.summary.totalReorderedAdverbChains}</div>
+                  <div className="text-xl font-bold text-destructive">{bulkResult.summary.totalReorderedAdverbChains}</div>
                   <div className="text-sm text-muted-foreground">Chains Fixed</div>
                 </div>
               </div>
