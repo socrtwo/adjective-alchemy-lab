@@ -63,6 +63,7 @@ export default {
 				'category-color': 'hsl(var(--category-color))',
 				'category-origin': 'hsl(var(--category-origin))',
 				'category-material': 'hsl(var(--category-material))',
+				'category-participle': 'hsl(var(--category-participle))',
 				'category-purpose': 'hsl(var(--category-purpose))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
