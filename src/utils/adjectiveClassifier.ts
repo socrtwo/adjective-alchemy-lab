@@ -106,45 +106,151 @@ export class AdjectiveClassifier {
     }).filter(classification => classification.category !== null);
   }
 
-  reorderAdjectives(sentence: string): { original: string; corrected: string; changes: boolean } {
+  findAdjectiveChains(sentence: string): Array<{ adjectives: AdjectiveClassification[]; startIndex: number; endIndex: number }> {
+    const words = sentence.toLowerCase().split(/\s+/);
+    const adjectives = this.analyzeSentence(sentence);
+    const chains: Array<{ adjectives: AdjectiveClassification[]; startIndex: number; endIndex: number }> = [];
+    
+    if (adjectives.length === 0) return chains;
+    
+    // Group consecutive adjectives into chains
+    let currentChain: AdjectiveClassification[] = [];
+    let chainStart = -1;
+    
+    for (let i = 0; i < words.length; i++) {
+      const adjective = adjectives.find(adj => adj.position === i);
+      
+      if (adjective) {
+        if (currentChain.length === 0) {
+          chainStart = i;
+        }
+        currentChain.push(adjective);
+      } else {
+        if (currentChain.length > 1) {
+          chains.push({
+            adjectives: currentChain,
+            startIndex: chainStart,
+            endIndex: i - 1
+          });
+        }
+        currentChain = [];
+      }
+    }
+    
+    // Handle chain at end of sentence
+    if (currentChain.length > 1) {
+      chains.push({
+        adjectives: currentChain,
+        startIndex: chainStart,
+        endIndex: words.length - 1
+      });
+    }
+    
+    return chains;
+  }
+
+  reorderAdjectives(sentence: string): { 
+    original: string; 
+    corrected: string; 
+    changes: boolean;
+    totalAdjectives: number;
+    reorderedAdjectives: number;
+    adjectiveChains: number;
+    reorderedChains: number;
+  } {
     const words = sentence.split(/\s+/);
     const adjectives = this.analyzeSentence(sentence);
+    const chains = this.findAdjectiveChains(sentence);
     
-    if (adjectives.length < 2) {
-      return { original: sentence, corrected: sentence, changes: false };
-    }
+    let totalReorderedAdjectives = 0;
+    let reorderedChains = 0;
+    let correctedWords = [...words];
+    let hasChanges = false;
     
-    // Sort adjectives by their category order
-    const sortedAdjectives = [...adjectives].sort((a, b) => {
-      const aIndex = CATEGORY_ORDER.indexOf(a.category);
-      const bIndex = CATEGORY_ORDER.indexOf(b.category);
-      return aIndex - bIndex;
-    });
-    
-    // Check if reordering is needed
-    const needsReordering = adjectives.some((adj, index) => 
-      sortedAdjectives[index].word !== adj.word
-    );
-    
-    if (!needsReordering) {
-      return { original: sentence, corrected: sentence, changes: false };
-    }
-    
-    // Create a copy of words and replace adjectives in order
-    const correctedWords = [...words];
-    const adjectivePositions = adjectives.map(adj => adj.position).sort((a, b) => a - b);
-    
-    // Replace adjectives in their sorted positions
-    sortedAdjectives.forEach((adj, index) => {
-      if (adjectivePositions[index] !== undefined) {
-        correctedWords[adjectivePositions[index]] = adj.word;
+    // Process each chain separately
+    for (const chain of chains) {
+      const sortedChain = [...chain.adjectives].sort((a, b) => {
+        const aIndex = CATEGORY_ORDER.indexOf(a.category);
+        const bIndex = CATEGORY_ORDER.indexOf(b.category);
+        return aIndex - bIndex;
+      });
+      
+      // Check if this chain needs reordering
+      const chainNeedsReordering = chain.adjectives.some((adj, index) => 
+        sortedChain[index].word !== adj.word
+      );
+      
+      if (chainNeedsReordering) {
+        hasChanges = true;
+        reorderedChains++;
+        totalReorderedAdjectives += chain.adjectives.length;
+        
+        // Replace adjectives in their sorted positions within this chain
+        const chainPositions = chain.adjectives.map(adj => adj.position).sort((a, b) => a - b);
+        sortedChain.forEach((adj, index) => {
+          if (chainPositions[index] !== undefined) {
+            correctedWords[chainPositions[index]] = adj.word;
+          }
+        });
       }
-    });
+    }
     
     return {
       original: sentence,
       corrected: correctedWords.join(' '),
-      changes: true
+      changes: hasChanges,
+      totalAdjectives: adjectives.length,
+      reorderedAdjectives: totalReorderedAdjectives,
+      adjectiveChains: chains.length,
+      reorderedChains
     };
+  }
+
+  analyzeMultipleSentences(text: string): {
+    sentences: Array<{
+      original: string;
+      corrected: string;
+      changes: boolean;
+      totalAdjectives: number;
+      reorderedAdjectives: number;
+      adjectiveChains: number;
+      reorderedChains: number;
+      adjectives: AdjectiveClassification[];
+    }>;
+    summary: {
+      totalSentences: number;
+      sentencesWithChanges: number;
+      totalAdjectives: number;
+      totalReorderedAdjectives: number;
+      totalChains: number;
+      totalReorderedChains: number;
+    };
+  } {
+    // Split text into sentences
+    const sentenceRegex = /[.!?]+/;
+    const sentences = text.split(sentenceRegex)
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+    
+    const results = sentences.map(sentence => {
+      const reorderResult = this.reorderAdjectives(sentence);
+      const adjectives = this.analyzeSentence(sentence);
+      
+      return {
+        ...reorderResult,
+        adjectives
+      };
+    });
+    
+    const summary = {
+      totalSentences: results.length,
+      sentencesWithChanges: results.filter(r => r.changes).length,
+      totalAdjectives: results.reduce((sum, r) => sum + r.totalAdjectives, 0),
+      totalReorderedAdjectives: results.reduce((sum, r) => sum + r.reorderedAdjectives, 0),
+      totalChains: results.reduce((sum, r) => sum + r.adjectiveChains, 0),
+      totalReorderedChains: results.reduce((sum, r) => sum + r.reorderedChains, 0)
+    };
+    
+    return { sentences: results, summary };
   }
 }
