@@ -11,14 +11,18 @@ const Index = () => {
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
               <GraduationCap className="w-10 h-10" />
-              <h1 className="text-4xl md:text-5xl font-bold">Royal Adjective Order</h1>
+              <h1 className="text-4xl md:text-5xl font-bold">Royal Word Order Analyzer</h1>
             </div>
             <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
-              Automatically reorder adjectives in sentences according to proper English grammar hierarchy
+              Automatically reorder adjectives and adverbs in sentences according to proper English grammar hierarchy
             </p>
             <div className="flex items-center justify-center gap-2 mt-4 text-white/80">
               <BookOpen className="w-5 h-5" />
-              <span className="text-lg">Opinion → Size → Age → Shape → Color → Origin → Material → Purpose</span>
+              <span className="text-lg">Adjectives: Opinion → Size → Age → Shape → Color → Origin → Material → Purpose</span>
+            </div>
+            <div className="flex items-center justify-center gap-2 mt-2 text-white/80">
+              <BookOpen className="w-5 h-5" />
+              <span className="text-lg">Adverbs: Manner → Place → Frequency → Time → Purpose</span>
             </div>
           </div>
         </div>

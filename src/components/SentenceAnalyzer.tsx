@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AdjectiveClassifier } from '@/utils/adjectiveClassifier';
 import { AdjectiveCategory, CATEGORY_LABELS, ADVERB_LABELS } from '@/types/adjective';
 import { AdjectiveHighlight } from './AdjectiveHighlight';
-import { ArrowRight, Sparkles, CheckCircle, XCircle, BarChart3, FileText, Info } from 'lucide-react';
+import { ArrowRight, Sparkles, CheckCircle, XCircle, BarChart3, FileText, Info, Settings } from 'lucide-react';
 
 interface AnalysisResult {
   original: string;
@@ -51,6 +52,7 @@ export function SentenceAnalyzer() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeTab, setActiveTab] = useState('single');
   const [statisticsLevel, setStatisticsLevel] = useState<'none' | 'simple' | 'detailed'>('none');
+  const [analysisMode, setAnalysisMode] = useState<'both' | 'adjectives' | 'adverbs'>('both');
 
   const classifier = new AdjectiveClassifier();
 
@@ -62,22 +64,71 @@ export function SentenceAnalyzer() {
     // Simulate processing time for better UX
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    const adjectiveResult = classifier.reorderAdjectives(inputText);
-    const adverbResult = classifier.reorderAdverbs(inputText);
+    let finalCorrected = inputText;
+    let hasChanges = false;
+    
+    // Get base adjective analysis
+    const baseResult = classifier.reorderAdjectives(inputText);
     const adjectives = classifier.analyzeSentence(inputText);
-    const adverbs = classifier.analyzeAdverbs(inputText);
     
-    setResult({
-      ...adjectiveResult,
+    // Initialize result with adjective data
+    let result: any = {
+      ...baseResult,
       adjectives,
-      totalAdverbs: adverbResult.totalAdverbs,
-      reorderedAdverbs: adverbResult.reorderedAdverbs,
-      adverbChains: adverbResult.adverbChains,
-      reorderedAdverbChains: adverbResult.reorderedChains,
-      adverbs,
-      adverbCorrected: adverbResult.corrected
-    });
+      totalAdverbs: 0,
+      reorderedAdverbs: 0,
+      adverbChains: 0,
+      reorderedAdverbChains: 0,
+      adverbs: [],
+      adverbCorrected: inputText
+    };
     
+    // Apply analysis based on mode
+    if (analysisMode === 'adjectives') {
+      // Only analyze adjectives
+      finalCorrected = baseResult.corrected;
+      hasChanges = baseResult.changes;
+    } else if (analysisMode === 'adverbs') {
+      // Only analyze adverbs
+      const adverbResult = classifier.reorderAdverbs(inputText);
+      const adverbs = classifier.analyzeAdverbs(inputText);
+      
+      result = {
+        original: inputText,
+        corrected: adverbResult.corrected,
+        changes: adverbResult.changes,
+        totalAdjectives: 0,
+        reorderedAdjectives: 0,
+        adjectiveChains: 0,
+        reorderedChains: 0,
+        adjectives: [],
+        totalAdverbs: adverbResult.totalAdverbs,
+        reorderedAdverbs: adverbResult.reorderedAdverbs,
+        adverbChains: adverbResult.adverbChains,
+        reorderedAdverbChains: adverbResult.reorderedChains,
+        adverbs,
+        adverbCorrected: adverbResult.corrected
+      };
+    } else {
+      // Analyze both (existing behavior)
+      const adverbResult = classifier.reorderAdverbs(baseResult.corrected);
+      const adverbs = classifier.analyzeAdverbs(inputText);
+      
+      result = {
+        ...baseResult,
+        corrected: adverbResult.corrected,
+        changes: baseResult.changes || adverbResult.changes,
+        adjectives,
+        totalAdverbs: adverbResult.totalAdverbs,
+        reorderedAdverbs: adverbResult.reorderedAdverbs,
+        adverbChains: adverbResult.adverbChains,
+        reorderedAdverbChains: adverbResult.reorderedChains,
+        adverbs,
+        adverbCorrected: adverbResult.corrected
+      };
+    }
+    
+    setResult(result);
     setIsAnalyzing(false);
   };
 
@@ -207,6 +258,27 @@ export function SentenceAnalyzer() {
           </TabsTrigger>
         </TabsList>
 
+        {/* Analysis Mode Setting */}
+        <Card className="p-4 shadow-card bg-gradient-card">
+          <div className="flex items-center gap-3">
+            <Settings className="w-5 h-5 text-scholar-blue" />
+            <div className="flex-1">
+              <label className="text-sm font-medium text-foreground">Analysis Mode</label>
+              <p className="text-xs text-muted-foreground">Choose what to analyze and reorder</p>
+            </div>
+            <Select value={analysisMode} onValueChange={(value: 'both' | 'adjectives' | 'adverbs') => setAnalysisMode(value)}>
+              <SelectTrigger className="w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="both">Both</SelectItem>
+                <SelectItem value="adjectives">Adjectives Only</SelectItem>
+                <SelectItem value="adverbs">Adverbs Only</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </Card>
+
         <TabsContent value="single" className="space-y-6">
           {/* Single Sentence Input */}
           <Card className="p-6 shadow-card bg-gradient-card">
@@ -231,7 +303,7 @@ export function SentenceAnalyzer() {
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 mr-2" />
-                    Analyze Adjective Order
+                    Analyze {analysisMode === 'both' ? 'Word Order' : analysisMode === 'adjectives' ? 'Adjective Order' : 'Adverb Order'}
                   </>
                 )}
               </Button>
