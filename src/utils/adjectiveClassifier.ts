@@ -13,13 +13,14 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'magnificent', 'splendid', 'marvelous', 'superb', 'outstanding', 'exceptional', 'mediocre', 'inferior',
     'superior', 'exquisite', 'stunning', 'breathtaking', 'impressive', 'remarkable', 'extraordinary', 'ordinary',
     'dusty', 'clean', 'dirty', 'spotless', 'grimy', 'pristine', 'tattered', 'worn', 'shabby', 'neat',
-    'cracked', 'broken', 'damaged', 'intact', 'flawless', 'imperfect', 'colorful', 'vibrant', 'dull', 'bright'
+    'cracked', 'broken', 'damaged', 'intact', 'flawless', 'imperfect', 'colorful', 'vibrant', 'dull', 'bright',
+    'mysterious', 'peculiar', 'heavy', 'fragile', 'tarnished', 'cold'
   ],
   size: [
     'big', 'small', 'tiny', 'huge', 'large', 'little', 'enormous', 'gigantic', 'microscopic', 'massive',
     'miniature', 'colossal', 'immense', 'petite', 'vast', 'compact', 'spacious', 'cramped', 'broad',
     'narrow', 'wide', 'thin', 'thick', 'fat', 'skinny', 'tall', 'short', 'high', 'low', 'deep', 'shallow',
-    'long', 'brief', 'extensive', 'limited', 'infinite', 'finite'
+    'long', 'brief', 'extensive', 'limited', 'infinite', 'finite', 'several'
   ],
   age: [
     'old', 'new', 'ancient', 'modern', 'young', 'elderly', 'aged', 'fresh', 'recent', 'contemporary',
@@ -55,7 +56,8 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'gold', 'silver', 'diamond', 'crystal', 'paper', 'cardboard', 'fabric', 'linen', 'velvet', 'satin',
     'denim', 'canvas', 'vinyl', 'foam', 'bamboo', 'cork', 'wicker', 'rattan', 'clay', 'porcelain',
     'embroidered', 'woven', 'knitted', 'crocheted', 'quilted', 'upholstered', 'lacquered', 'polished',
-    'brushed', 'textured', 'smooth', 'rough', 'glossy', 'matte', 'shiny', 'dull', 'transparent', 'opaque'
+    'brushed', 'textured', 'smooth', 'rough', 'glossy', 'matte', 'shiny', 'dull', 'transparent', 'opaque',
+    'rusty'
   ],
   participle: [
     // Present participles (verb + ing acting as adjectives)
@@ -118,7 +120,7 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'playing', 'working', 'studying', 'teaching', 'learning', 'eating', 'drinking', 'driving', 'flying',
     'sailing', 'hiking', 'camping', 'hunting', 'fishing', 'gardening', 'painting', 'drawing', 'sewing',
     'knitting', 'building', 'repairing', 'measuring', 'cutting', 'grinding', 'mixing', 'storing',
-    'protecting', 'decorating', 'lighting', 'heating', 'cooling'
+    'protecting', 'decorating', 'lighting', 'heating', 'cooling', 'perfume', 'front'
   ]
 };
 
@@ -200,13 +202,39 @@ export class AdjectiveClassifier {
   }
 
   extractAdjectives(sentence: string): string[] {
-    // Simple word extraction - in a real application, you might use a POS tagger
+    // Enhanced word extraction with better noun-adjective position analysis
     const words = sentence.toLowerCase().match(/\b[a-z]+\b/g) || [];
+    const foundAdjectives: string[] = [];
     
-    return words.filter(word => {
-      // Check if the word is in any category
-      return CATEGORY_ORDER.some(category => this.database[category].has(word));
+    // Check each word for direct match in database
+    words.forEach((word, index) => {
+      if (CATEGORY_ORDER.some(category => this.database[category].has(word))) {
+        foundAdjectives.push(word);
+      }
     });
+    
+    // Additional pattern matching for adjectives that might appear after nouns
+    // Look for patterns like "bottle perfume" -> "perfume bottle"
+    for (let i = 0; i < words.length - 1; i++) {
+      const currentWord = words[i];
+      const nextWord = words[i + 1];
+      
+      // Check if current word could be a noun and next word is an adjective
+      if (this.isPotentialNoun(currentWord) && this.classifyAdjective(nextWord)) {
+        if (!foundAdjectives.includes(nextWord)) {
+          foundAdjectives.push(nextWord);
+        }
+      }
+    }
+    
+    return foundAdjectives;
+  }
+
+  private isPotentialNoun(word: string): boolean {
+    // Simple heuristic to identify potential nouns
+    const commonNouns = ['bottle', 'box', 'chest', 'sign', 'floor', 'window', 'vase', 'earrings', 'coins', 'scarves', 'tablecloths', 'candlesticks'];
+    return commonNouns.includes(word.toLowerCase()) || 
+           (word.length > 3 && !word.endsWith('ly') && !word.endsWith('ing'));
   }
 
   extractAdverbs(sentence: string): string[] {
