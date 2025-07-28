@@ -1,13 +1,19 @@
-import { AdjectiveCategory, AdjectiveClassification, CATEGORY_ORDER } from '@/types/adjective';
+import { AdjectiveCategory, AdjectiveClassification, AdverbCategory, AdverbClassification, CATEGORY_ORDER, ADVERB_ORDER } from '@/types/adjective';
+import { findAdverbChains, reorderAdverbs } from './adverbMethods';
 
 // Comprehensive adjective database organized by category
 const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
   opinion: [
     'beautiful', 'ugly', 'nice', 'good', 'bad', 'excellent', 'terrible', 'wonderful', 'awful', 'amazing',
-    'horrible', 'fantastic', 'lovely', 'disgusting', 'perfect', 'awful', 'brilliant', 'stupid', 'clever',
+    'horrible', 'fantastic', 'lovely', 'disgusting', 'perfect', 'brilliant', 'stupid', 'clever',
     'foolish', 'wise', 'silly', 'smart', 'dumb', 'gorgeous', 'hideous', 'pretty', 'handsome', 'attractive',
     'repulsive', 'charming', 'delightful', 'pleasant', 'unpleasant', 'adorable', 'cute', 'sweet', 'bitter',
-    'sour', 'delicious', 'tasty', 'bland', 'spicy', 'mild', 'strong', 'weak', 'powerful', 'gentle'
+    'sour', 'delicious', 'tasty', 'bland', 'spicy', 'mild', 'strong', 'weak', 'powerful', 'gentle',
+    'ornate', 'delicate', 'elegant', 'graceful', 'sophisticated', 'refined', 'crude', 'rough', 'smooth',
+    'magnificent', 'splendid', 'marvelous', 'superb', 'outstanding', 'exceptional', 'mediocre', 'inferior',
+    'superior', 'exquisite', 'stunning', 'breathtaking', 'impressive', 'remarkable', 'extraordinary', 'ordinary',
+    'dusty', 'clean', 'dirty', 'spotless', 'grimy', 'pristine', 'tattered', 'worn', 'shabby', 'neat',
+    'cracked', 'broken', 'damaged', 'intact', 'flawless', 'imperfect', 'colorful', 'vibrant', 'dull', 'bright'
   ],
   size: [
     'big', 'small', 'tiny', 'huge', 'large', 'little', 'enormous', 'gigantic', 'microscopic', 'massive',
@@ -37,14 +43,19 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'american', 'chinese', 'french', 'british', 'german', 'italian', 'japanese', 'spanish', 'russian',
     'indian', 'canadian', 'australian', 'mexican', 'brazilian', 'korean', 'thai', 'greek', 'turkish',
     'egyptian', 'moroccan', 'nigerian', 'south african', 'argentinian', 'chilean', 'peruvian', 'venezuelan',
-    'european', 'asian', 'african', 'american', 'latin', 'nordic', 'scandinavian', 'mediterranean',
-    'middle eastern', 'western', 'eastern', 'northern', 'southern', 'tropical', 'arctic', 'antarctic'
+    'european', 'asian', 'african', 'latin', 'nordic', 'scandinavian', 'mediterranean',
+    'middle eastern', 'western', 'eastern', 'northern', 'southern', 'tropical', 'arctic', 'antarctic',
+    'roman', 'celtic', 'viking', 'persian', 'byzantine', 'ottoman', 'mayan', 'aztec', 'egyptian',
+    'babylonian', 'sumerian', 'phoenician', 'carthaginian', 'venetian', 'florentine', 'parisian', 'londoner',
+    'new yorker', 'californian', 'texan', 'midwestern', 'southeastern', 'northwestern', 'southwestern'
   ],
   material: [
     'wooden', 'plastic', 'metal', 'metallic', 'cotton', 'silk', 'wool', 'leather', 'rubber', 'glass',
     'ceramic', 'stone', 'concrete', 'marble', 'granite', 'steel', 'iron', 'aluminum', 'copper', 'brass',
     'gold', 'silver', 'diamond', 'crystal', 'paper', 'cardboard', 'fabric', 'linen', 'velvet', 'satin',
-    'denim', 'canvas', 'vinyl', 'foam', 'bamboo', 'cork', 'wicker', 'rattan', 'clay', 'porcelain'
+    'denim', 'canvas', 'vinyl', 'foam', 'bamboo', 'cork', 'wicker', 'rattan', 'clay', 'porcelain',
+    'embroidered', 'woven', 'knitted', 'crocheted', 'quilted', 'upholstered', 'lacquered', 'polished',
+    'brushed', 'textured', 'smooth', 'rough', 'glossy', 'matte', 'shiny', 'dull', 'transparent', 'opaque'
   ],
   purpose: [
     'sleeping', 'running', 'cooking', 'cleaning', 'writing', 'reading', 'swimming', 'dancing', 'singing',
@@ -55,8 +66,43 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
   ]
 };
 
+const ADVERB_DATABASE: Record<AdverbCategory, string[]> = {
+  manner: [
+    'quickly', 'slowly', 'carefully', 'carelessly', 'loudly', 'quietly', 'softly', 'harshly', 'gently', 'roughly',
+    'smoothly', 'abruptly', 'suddenly', 'gradually', 'immediately', 'instantly', 'eventually', 'finally',
+    'eagerly', 'reluctantly', 'willingly', 'unwillingly', 'confidently', 'nervously', 'calmly', 'frantically',
+    'patiently', 'impatiently', 'politely', 'rudely', 'kindly', 'cruelly', 'honestly', 'dishonestly',
+    'clearly', 'vaguely', 'precisely', 'approximately', 'exactly', 'roughly', 'beautifully', 'uglily'
+  ],
+  place: [
+    'here', 'there', 'everywhere', 'anywhere', 'somewhere', 'nowhere', 'nearby', 'far', 'close', 'distant',
+    'inside', 'outside', 'upstairs', 'downstairs', 'underground', 'overhead', 'abroad', 'home', 'away',
+    'forward', 'backward', 'sideways', 'northward', 'southward', 'eastward', 'westward', 'inward', 'outward',
+    'above', 'below', 'beneath', 'behind', 'ahead', 'around', 'through', 'across', 'along', 'beyond'
+  ],
+  frequency: [
+    'always', 'never', 'often', 'rarely', 'seldom', 'sometimes', 'occasionally', 'frequently', 'constantly',
+    'regularly', 'irregularly', 'continuously', 'intermittently', 'repeatedly', 'once', 'twice', 'thrice',
+    'daily', 'weekly', 'monthly', 'yearly', 'annually', 'hourly', 'usually', 'normally', 'typically',
+    'commonly', 'uncommonly', 'habitually', 'traditionally', 'customarily', 'ordinarily', 'generally'
+  ],
+  time: [
+    'now', 'then', 'today', 'yesterday', 'tomorrow', 'tonight', 'earlier', 'later', 'soon', 'immediately',
+    'recently', 'formerly', 'previously', 'currently', 'presently', 'afterwards', 'beforehand', 'meanwhile',
+    'simultaneously', 'eventually', 'finally', 'initially', 'originally', 'ultimately', 'temporarily',
+    'permanently', 'briefly', 'momentarily', 'instantly', 'suddenly', 'gradually', 'slowly', 'quickly'
+  ],
+  purpose: [
+    'intentionally', 'accidentally', 'deliberately', 'purposely', 'consciously', 'unconsciously', 'voluntarily',
+    'involuntarily', 'willingly', 'unwillingly', 'knowingly', 'unknowingly', 'specifically', 'generally',
+    'particularly', 'especially', 'mainly', 'primarily', 'chiefly', 'mostly', 'largely', 'partly', 'entirely',
+    'completely', 'partially', 'fully', 'totally', 'absolutely', 'relatively', 'comparatively'
+  ]
+};
+
 export class AdjectiveClassifier {
   private database: Record<AdjectiveCategory, Set<string>>;
+  private adverbDatabase: Record<AdverbCategory, Set<string>>;
 
   constructor() {
     // Convert arrays to sets for faster lookup and normalize to lowercase
@@ -64,6 +110,11 @@ export class AdjectiveClassifier {
       acc[category as AdjectiveCategory] = new Set(words.map(word => word.toLowerCase()));
       return acc;
     }, {} as Record<AdjectiveCategory, Set<string>>);
+
+    this.adverbDatabase = Object.entries(ADVERB_DATABASE).reduce((acc, [category, words]) => {
+      acc[category as AdverbCategory] = new Set(words.map(word => word.toLowerCase()));
+      return acc;
+    }, {} as Record<AdverbCategory, Set<string>>);
   }
 
   classifyAdjective(word: string): AdjectiveCategory | null {
@@ -72,6 +123,19 @@ export class AdjectiveClassifier {
     // Check each category in order of priority
     for (const category of CATEGORY_ORDER) {
       if (this.database[category].has(lowercaseWord)) {
+        return category;
+      }
+    }
+    
+    return null;
+  }
+
+  classifyAdverb(word: string): AdverbCategory | null {
+    const lowercaseWord = word.toLowerCase();
+    
+    // Check each category in order of priority
+    for (const category of ADVERB_ORDER) {
+      if (this.adverbDatabase[category].has(lowercaseWord)) {
         return category;
       }
     }
@@ -89,6 +153,14 @@ export class AdjectiveClassifier {
     });
   }
 
+  extractAdverbs(sentence: string): string[] {
+    const words = sentence.toLowerCase().match(/\b[a-z]+\b/g) || [];
+    
+    return words.filter(word => {
+      return ADVERB_ORDER.some(category => this.adverbDatabase[category].has(word));
+    });
+  }
+
   analyzeSentence(sentence: string): AdjectiveClassification[] {
     const adjectives = this.extractAdjectives(sentence);
     const words = sentence.toLowerCase().split(/\s+/);
@@ -102,6 +174,23 @@ export class AdjectiveClassifier {
         category: category!,
         position,
         confidence: 1.0 // In a real implementation, this could be calculated
+      };
+    }).filter(classification => classification.category !== null);
+  }
+
+  analyzeAdverbs(sentence: string): AdverbClassification[] {
+    const adverbs = this.extractAdverbs(sentence);
+    const words = sentence.toLowerCase().split(/\s+/);
+    
+    return adverbs.map(adverb => {
+      const category = this.classifyAdverb(adverb);
+      const position = words.indexOf(adverb.toLowerCase());
+      
+      return {
+        word: adverb,
+        category: category!,
+        position,
+        confidence: 1.0
       };
     }).filter(classification => classification.category !== null);
   }
@@ -216,6 +305,11 @@ export class AdjectiveClassifier {
       adjectiveChains: number;
       reorderedChains: number;
       adjectives: AdjectiveClassification[];
+      totalAdverbs: number;
+      reorderedAdverbs: number;
+      adverbChains: number;
+      reorderedAdverbChains: number;
+      adverbs: AdverbClassification[];
     }>;
     summary: {
       totalSentences: number;
@@ -224,6 +318,10 @@ export class AdjectiveClassifier {
       totalReorderedAdjectives: number;
       totalChains: number;
       totalReorderedChains: number;
+      totalAdverbs: number;
+      totalReorderedAdverbs: number;
+      totalAdverbChains: number;
+      totalReorderedAdverbChains: number;
     };
   } {
     // Split text into sentences
@@ -234,11 +332,18 @@ export class AdjectiveClassifier {
     
     const results = sentences.map(sentence => {
       const reorderResult = this.reorderAdjectives(sentence);
+      const adverbResult = this.reorderAdverbs(sentence);
       const adjectives = this.analyzeSentence(sentence);
+      const adverbs = this.analyzeAdverbs(sentence);
       
       return {
         ...reorderResult,
-        adjectives
+        adjectives,
+        totalAdverbs: adverbResult.totalAdverbs,
+        reorderedAdverbs: adverbResult.reorderedAdverbs,
+        adverbChains: adverbResult.adverbChains,
+        reorderedAdverbChains: adverbResult.reorderedChains,
+        adverbs
       };
     });
     
@@ -248,9 +353,29 @@ export class AdjectiveClassifier {
       totalAdjectives: results.reduce((sum, r) => sum + r.totalAdjectives, 0),
       totalReorderedAdjectives: results.reduce((sum, r) => sum + r.reorderedAdjectives, 0),
       totalChains: results.reduce((sum, r) => sum + r.adjectiveChains, 0),
-      totalReorderedChains: results.reduce((sum, r) => sum + r.reorderedChains, 0)
+      totalReorderedChains: results.reduce((sum, r) => sum + r.reorderedChains, 0),
+      totalAdverbs: results.reduce((sum, r) => sum + r.totalAdverbs, 0),
+      totalReorderedAdverbs: results.reduce((sum, r) => sum + r.reorderedAdverbs, 0),
+      totalAdverbChains: results.reduce((sum, r) => sum + r.adverbChains, 0),
+      totalReorderedAdverbChains: results.reduce((sum, r) => sum + r.reorderedAdverbChains, 0)
     };
     
     return { sentences: results, summary };
+  }
+
+  reorderAdverbs(sentence: string): { 
+    original: string; 
+    corrected: string; 
+    changes: boolean;
+    totalAdverbs: number;
+    reorderedAdverbs: number;
+    adverbChains: number;
+    reorderedChains: number;
+  } {
+    const words = sentence.split(/\s+/);
+    const adverbs = this.analyzeAdverbs(sentence);
+    const chains = findAdverbChains(sentence, adverbs);
+    
+    return reorderAdverbs(sentence, adverbs, chains);
   }
 }
