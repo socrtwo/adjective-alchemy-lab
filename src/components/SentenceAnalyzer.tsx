@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { AdjectiveClassifier } from '@/utils/adjectiveClassifier';
 import { AdjectiveCategory, CATEGORY_LABELS, ADVERB_LABELS } from '@/types/adjective';
 import { AdjectiveHighlight } from './AdjectiveHighlight';
-import { ArrowRight, Sparkles, CheckCircle, XCircle, BarChart3, FileText } from 'lucide-react';
+import { ArrowRight, Sparkles, CheckCircle, XCircle, BarChart3, FileText, Info } from 'lucide-react';
 
 interface AnalysisResult {
   original: string;
@@ -192,7 +192,7 @@ export function SentenceAnalyzer() {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="single" className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
             Single Sentence
@@ -200,6 +200,10 @@ export function SentenceAnalyzer() {
           <TabsTrigger value="bulk" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
             Bulk Analysis
+          </TabsTrigger>
+          <TabsTrigger value="about" className="flex items-center gap-2">
+            <Info className="w-4 h-4" />
+            About
           </TabsTrigger>
         </TabsList>
 
@@ -275,6 +279,90 @@ export function SentenceAnalyzer() {
                   </>
                 )}
               </Button>
+            </div>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="about" className="space-y-6">
+          {/* About Section */}
+          <Card className="p-6 shadow-card bg-gradient-card">
+            <div className="flex items-center gap-2 mb-6">
+              <Info className="w-5 h-5 text-scholar-blue" />
+              <h2 className="text-xl font-semibold text-foreground">About Adjective & Adverb Order</h2>
+            </div>
+            <div className="space-y-6 text-foreground/90 leading-relaxed">
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">What This App Does</h3>
+                <p>
+                  This application analyzes and corrects the order of adjectives and adverbs in English sentences. 
+                  It can identify when multiple adjectives or adverbs appear together and reorder them according 
+                  to standard English grammar rules.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">Adjective Order Rules</h3>
+                <p className="mb-3">
+                  English follows a specific order when multiple adjectives describe the same noun:
+                </p>
+                <div className="bg-muted/30 p-4 rounded-lg">
+                  <ol className="list-decimal list-inside space-y-1 text-sm">
+                    <li><strong>Opinion:</strong> beautiful, ugly, nice, good, bad</li>
+                    <li><strong>Size:</strong> big, small, tiny, huge, little</li>
+                    <li><strong>Age:</strong> old, new, ancient, modern, young</li>
+                    <li><strong>Shape:</strong> round, square, flat, curved, straight</li>
+                    <li><strong>Color:</strong> red, blue, green, white, black</li>
+                    <li><strong>Origin:</strong> American, Chinese, French, British</li>
+                    <li><strong>Material:</strong> wooden, plastic, metal, cotton, silk</li>
+                    <li><strong>Participle:</strong> running (shoes), broken (glass), written (word)</li>
+                    <li><strong>Purpose:</strong> sleeping (bag), cooking (pot)</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">Adverb Order Rules</h3>
+                <p className="mb-3">
+                  When multiple adverbs appear together, they typically follow this order:
+                </p>
+                <div className="bg-muted/30 p-4 rounded-lg">
+                  <ol className="list-decimal list-inside space-y-1 text-sm">
+                    <li><strong>Manner:</strong> how something is done - quickly, carefully, loudly</li>
+                    <li><strong>Place:</strong> where - here, outside, everywhere</li>
+                    <li><strong>Frequency:</strong> how often - always, sometimes, never</li>
+                    <li><strong>Time:</strong> when - now, yesterday, soon</li>
+                    <li><strong>Purpose:</strong> why - therefore, consequently</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">Native vs Non-Native Speakers</h3>
+                <p>
+                  Interestingly, foreign language learners often have a complex relationship with these ordering rules. 
+                  While native English speakers intuitively know these orders (saying "beautiful small old" sounds natural, 
+                  while "old small beautiful" feels wrong), they're rarely explicitly taught these rules in school.
+                </p>
+                <p className="mt-3">
+                  Non-native speakers initially struggle more with getting these orders right since they don't have 
+                  the intuitive sense that native speakers develop. However, because foreign language learners are 
+                  explicitly taught these ordering rules in formal English classes, they sometimes end up more 
+                  consciously aware of the correct patterns and can eventually surpass native speakers in applying 
+                  them correctly in complex sentences.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">Examples</h3>
+                <div className="space-y-3">
+                  <div className="bg-red-50 border border-red-200 p-3 rounded-lg">
+                    <p className="text-red-800"><strong>Incorrect:</strong> "She bought a red small beautiful dress"</p>
+                  </div>
+                  <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
+                    <p className="text-green-800"><strong>Correct:</strong> "She bought a beautiful small red dress"</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </Card>
         </TabsContent>

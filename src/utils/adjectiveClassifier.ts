@@ -14,13 +14,38 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'superior', 'exquisite', 'stunning', 'breathtaking', 'impressive', 'remarkable', 'extraordinary', 'ordinary',
     'dusty', 'clean', 'dirty', 'spotless', 'grimy', 'pristine', 'tattered', 'worn', 'shabby', 'neat',
     'cracked', 'broken', 'damaged', 'intact', 'flawless', 'imperfect', 'colorful', 'vibrant', 'dull', 'bright',
-    'mysterious', 'peculiar', 'heavy', 'fragile', 'tarnished', 'cold'
+    'mysterious', 'peculiar', 'heavy', 'fragile', 'tarnished', 'cold', 'acceptable', 'adorable', 'agreeable',
+    'alarming', 'amusing', 'anxious', 'appalling', 'appealing', 'attractive', 'beautiful', 'bewildering',
+    'bizarre', 'boring', 'brainy', 'breakable', 'brief', 'broad', 'bulky', 'calm', 'careful', 'charming',
+    'clean', 'clear', 'clever', 'cloudy', 'clumsy', 'colorful', 'colossal', 'comfortable', 'concerned',
+    'confused', 'cooperative', 'courageous', 'crazy', 'creepy', 'crowded', 'cruel', 'curious', 'cute',
+    'dangerous', 'dark', 'defiant', 'delightful', 'depressed', 'determined', 'different', 'difficult',
+    'disgusting', 'distinct', 'disturbed', 'dizzy', 'doubtful', 'drab', 'dull', 'eager', 'easy', 'elated',
+    'elegant', 'embarrassed', 'enchanting', 'encouraging', 'energetic', 'enthusiastic', 'envious', 'evil',
+    'excited', 'expensive', 'exuberant', 'fair', 'faithful', 'famous', 'fancy', 'fantastic', 'fierce',
+    'filthy', 'fine', 'foolish', 'fragile', 'frail', 'frantic', 'friendly', 'frightened', 'funny',
+    'gentle', 'gifted', 'glamorous', 'gleaming', 'glorious', 'gorgeous', 'graceful', 'grieving',
+    'grotesque', 'grumpy', 'handsome', 'happy', 'healthy', 'helpful', 'helpless', 'hilarious',
+    'homeless', 'homely', 'horrible', 'hungry', 'hurt', 'ill', 'important', 'impossible', 'inexpensive',
+    'innocent', 'inquisitive', 'itchy', 'jealous', 'jittery', 'jolly', 'joyous', 'kind', 'lazy',
+    'light', 'lively', 'lonely', 'lovely', 'lucky', 'magnificent', 'misty', 'modern', 'motionless',
+    'muddy', 'mushy', 'mysterious', 'nasty', 'naughty', 'nervous', 'nice', 'nutty', 'obedient',
+    'obnoxious', 'odd', 'open', 'outrageous', 'outstanding', 'panicky', 'perfect', 'plain', 'pleasant',
+    'poised', 'poor', 'powerful', 'precious', 'prickly', 'proud', 'puzzled', 'quaint', 'real',
+    'relieved', 'repulsive', 'rich', 'scary', 'selfish', 'shiny', 'shy', 'silly', 'sleepy',
+    'smiling', 'smoggy', 'sore', 'sparkling', 'splendid', 'spotless', 'stormy', 'strange', 'stupid',
+    'successful', 'super', 'talented', 'tame', 'tender', 'tense', 'terrible', 'thankful', 'thoughtful',
+    'thoughtless', 'tired', 'tough', 'troubled', 'ugliest', 'ugly', 'uninterested', 'unsightly',
+    'unusual', 'upset', 'uptight', 'vast', 'victorious', 'vivacious', 'wandering', 'weary', 'wicked',
+    'wide', 'wild', 'witty', 'worried', 'worrisome', 'wrong', 'zany', 'zealous'
   ],
   size: [
     'big', 'small', 'tiny', 'huge', 'large', 'little', 'enormous', 'gigantic', 'microscopic', 'massive',
     'miniature', 'colossal', 'immense', 'petite', 'vast', 'compact', 'spacious', 'cramped', 'broad',
     'narrow', 'wide', 'thin', 'thick', 'fat', 'skinny', 'tall', 'short', 'high', 'low', 'deep', 'shallow',
-    'long', 'brief', 'extensive', 'limited', 'infinite', 'finite', 'several'
+    'long', 'brief', 'extensive', 'limited', 'infinite', 'finite', 'several', 'abundant', 'ample',
+    'bulky', 'chubby', 'heavy', 'light', 'lean', 'mammoth', 'plump', 'puny', 'scrawny', 'slight',
+    'substantial', 'tremendous', 'voluminous', 'weighty'
   ],
   age: [
     'old', 'new', 'ancient', 'modern', 'young', 'elderly', 'aged', 'fresh', 'recent', 'contemporary',
@@ -120,7 +145,8 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'playing', 'working', 'studying', 'teaching', 'learning', 'eating', 'drinking', 'driving', 'flying',
     'sailing', 'hiking', 'camping', 'hunting', 'fishing', 'gardening', 'painting', 'drawing', 'sewing',
     'knitting', 'building', 'repairing', 'measuring', 'cutting', 'grinding', 'mixing', 'storing',
-    'protecting', 'decorating', 'lighting', 'heating', 'cooling', 'perfume', 'front'
+    'protecting', 'decorating', 'lighting', 'heating', 'cooling', 'perfume', 'front', 'peculiar',
+    'rusty', 'tarnished'
   ]
 };
 
