@@ -735,7 +735,23 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'gray',
     'grey', 'golden', 'silver', 'bronze', 'copper', 'crimson', 'scarlet', 'maroon', 'navy', 'royal',
     'sky', 'turquoise', 'teal', 'lime', 'olive', 'forest', 'emerald', 'violet', 'lavender', 'magenta',
-    'rose', 'coral', 'salmon', 'beige', 'tan', 'cream', 'ivory', 'pearl', 'jet', 'charcoal', 'slate'
+    'rose', 'coral', 'salmon', 'beige', 'tan', 'cream', 'ivory', 'pearl', 'jet', 'charcoal', 'slate',
+    // Extended color adjectives from user request
+    'achromatic', 'aqua', 'ashen', 'ashy', 'azure', 'blackish', 'blonde', 'blond', 'bluer', 'bluest',
+    'bluish', 'bottle green', 'brick red', 'brindled', 'brownish', 'brunette', 'brunet', 'chromatic',
+    'colored', 'colorful', 'colorless', 'coloured', 'colourful', 'colourless', 'columbine', 'coppery',
+    'crocus', 'cyclamen', 'dark', 'drab', 'dun', 'dusky', 'dusk', 'ecru', 'eggshell', 'electric blue',
+    'evergreen', 'flaxen', 'grayish', 'greenish', 'greyish', 'grizzled', 'grizzly', 'heather', 'hoary',
+    'hued', 'indigo blue', 'infrared', 'inkier', 'inkiest', 'inky', 'iridescent', 'jade green', 'leaden',
+    'lemony', 'light', 'lime green', 'livid', 'marmalade', 'milky', 'mint', 'monochromatic', 'mottled',
+    'multicolored', 'neutral', 'nonwhite', 'ocher', 'opalescent', 'paled', 'paler', 'palest', 'pale',
+    'pallid', 'panchromatic', 'pastel', 'pea green', 'peacock blue', 'pearl grey', 'piebald', 'pied',
+    'pillar box', 'pinkish', 'pinto', 'pistachio', 'plum', 'primrose', 'prismatic', 'purplish', 'redder',
+    'reddest', 'reddish', 'roan', 'roseate', 'rosy', 'royal blue', 'royal purple', 'rubicund', 'ruddier',
+    'ruddiest', 'ruddy', 'russet', 'rusty', 'sable', 'sallow', 'salmon pink', 'sandy', 'sepia', 'silvery',
+    'sky blue', 'snowy', 'somber', 'sombre', 'sooty', 'spotted', 'steel blue', 'steel grey', 'strawberry blonde',
+    'straw', 'striped', 'swarthy', 'tabby', 'tawnier', 'tawniest', 'tricolor', 'ultramarine', 'ultraviolet',
+    'umber', 'varicolored', 'variegated', 'verdant'
   ],
   origin: [
     'american', 'chinese', 'french', 'british', 'german', 'italian', 'japanese', 'spanish', 'russian',
