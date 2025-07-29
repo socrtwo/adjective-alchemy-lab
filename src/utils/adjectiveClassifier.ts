@@ -669,7 +669,23 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'narrow', 'wide', 'thin', 'thick', 'fat', 'skinny', 'tall', 'short', 'high', 'low', 'deep', 'shallow',
     'long', 'brief', 'extensive', 'limited', 'infinite', 'finite', 'several', 'abundant', 'ample',
     'bulky', 'chubby', 'heavy', 'light', 'lean', 'mammoth', 'plump', 'puny', 'scrawny', 'slight',
-    'substantial', 'tremendous', 'voluminous', 'weighty'
+    'substantial', 'tremendous', 'voluminous', 'weighty',
+    // Extended size adjectives from user request
+    'ampler', 'amplest', 'beefier', 'beefiest', 'beefy', 'bigger', 'biggest', 'burly', 'capacious',
+    'cavernous', 'chubbier', 'chubbiest', 'chunky', 'chunkier', 'chunkiest', 'commodious', 'corpulent',
+    'denser', 'densest', 'dense', 'diminutive', 'dinkier', 'dinkiest', 'dinkies', 'dinky', 'elephantine',
+    'fatter', 'fattest', 'full', 'gargantuan', 'giant', 'hairbreadth', 'half', 'heavier', 'heaviest',
+    'heavies', 'heavyset', 'heftier', 'heftiest', 'hefty', 'huger', 'hugest', 'hulking', 'infinitesimal',
+    'lanky', 'lank', 'larger', 'largest', 'lengthier', 'lengthiest', 'lengthy', 'lesser', 'lightweight',
+    'longish', 'lowish', 'macroscopic', 'meager', 'meagre', 'medium', 'minimal', 'minimum', 'mini',
+    'minuscule', 'minutely', 'minute', 'monumental', 'mountainous', 'much', 'outsize', 'overlong',
+    'oversize', 'overweight', 'peewee', 'portlier', 'portliest', 'portly', 'pudgy', 'punier', 'puniest',
+    'roomier', 'roomiest', 'roomy', 'scantier', 'scantiest', 'scanty', 'scant', 'scrawnier', 'scrawniest',
+    'shortish', 'sizable', 'sizeable', 'sized', 'skimpy', 'skinnier', 'skinniest', 'slender', 'slimmer',
+    'slimmest', 'slim', 'smallish', 'stockier', 'stockiest', 'stocky', 'stout', 'strapping', 'stubby',
+    'stumpier', 'stumpiest', 'stumpy', 'stupendous', 'subatomic', 'teenier', 'teeniest', 'teensy',
+    'teeny', 'thickset', 'tinier', 'tiniest', 'titanic', 'towering', 'tubbier', 'tubbiest', 'tubby',
+    'undersized', 'undersize', 'underweight'
   ],
   age: [
     'old', 'new', 'ancient', 'modern', 'young', 'elderly', 'aged', 'fresh', 'recent', 'contemporary',
