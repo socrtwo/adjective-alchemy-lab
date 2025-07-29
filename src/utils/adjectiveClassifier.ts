@@ -761,7 +761,16 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'middle eastern', 'western', 'eastern', 'northern', 'southern', 'tropical', 'arctic', 'antarctic',
     'roman', 'celtic', 'viking', 'persian', 'byzantine', 'ottoman', 'mayan', 'aztec', 'egyptian',
     'babylonian', 'sumerian', 'phoenician', 'carthaginian', 'venetian', 'florentine', 'parisian', 'londoner',
-    'new yorker', 'californian', 'texan', 'midwestern', 'southeastern', 'northwestern', 'southwestern'
+    'new yorker', 'californian', 'texan', 'midwestern', 'southeastern', 'northwestern', 'southwestern',
+    // Extended origin adjectives from user request
+    'aboriginal', 'alien', 'alpine', 'cockney', 'continental', 'creole', 'east by north', 'easterly',
+    'easternmost', 'eastward', 'east', 'ethnic', 'exotic', 'expatriate', 'extraterrestrial', 'foreign',
+    'indigenous', 'native', 'north by east', 'northeast by east', 'northeast by north', 'northeasterly',
+    'northeastern', 'northeastward', 'northeast', 'northerly', 'northernmost', 'northward',
+    'northwest by north', 'northwesterly', 'northwestward', 'northwest', 'north', 'oriental', 'orient',
+    'outback', 'overseas', 'south by east', 'southeast by east', 'southeasterly', 'southeastward',
+    'southeast', 'southerly', 'southernmost', 'southward', 'southwesterly', 'southwestward',
+    'southwest', 'south'
   ],
   material: [
     'wooden', 'plastic', 'metal', 'metallic', 'cotton', 'silk', 'wool', 'leather', 'rubber', 'glass',
