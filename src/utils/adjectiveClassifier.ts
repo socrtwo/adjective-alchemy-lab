@@ -714,7 +714,22 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'round', 'square', 'flat', 'curved', 'straight', 'circular', 'rectangular', 'triangular', 'oval',
     'spherical', 'cylindrical', 'conical', 'angular', 'pointed', 'blunt', 'sharp', 'smooth', 'rough',
     'bumpy', 'uneven', 'level', 'crooked', 'twisted', 'bent', 'stretched', 'compressed', 'hollow',
-    'solid', 'dense', 'loose', 'tight', 'open', 'closed', 'narrow', 'wide'
+    'solid', 'dense', 'loose', 'tight', 'open', 'closed', 'narrow', 'wide',
+    // Extended shape adjectives from user request
+    'amorphous', 'annular', 'aquiline', 'arched', 'arch', 'arc', 'asymmetric', 'bar', 'beaked', 'beetle',
+    'bifurcate', 'bow legs', 'bowlegged', 'bulbous', 'bulgy', 'cleft', 'cloven', 'concave', 'concentric',
+    'conic', 'contorted', 'convex', 'crescent', 'crisscross', 'crook', 'cruciform', 'cubical', 'cubic',
+    'cupped', 'curly', 'curvaceous', 'curvier', 'curviest', 'curvy', 'diagonal', 'dished', 'domed',
+    'elliptical', 'elliptic', 'elongate', 'equilateral', 'forked', 'foursquare', 'gabled', 'geometric',
+    'globular', 'helical', 'hemispherical', 'hemispheric', 'hexagonal', 'hooked', 'horizontal', 'humpbacked',
+    'hunchbacked', 'isosceles', 'jagged', 'linear', 'lobed', 'looped', 'lopsided', 'misshapen', 'oblate',
+    'oblique', 'oblong', 'octagonal', 'orthogonal', 'ovoid', 'parabolic', 'parallel', 'peaked', 'pentagonal',
+    'perpendicular', 'pinnate', 'planar', 'plane', 'polygonal', 'potbellied', 'pouched', 'pyramidal',
+    'quadrilateral', 'radial', 'rectilinear', 'rhomboid', 'rotund', 'roundabout', 'rounded', 'rounding',
+    'roundish', 'scalene', 'semicircular', 'serpentine', 'shaped', 'shapeless', 'shapelier', 'shapeliest',
+    'shapely', 'sinuous', 'sinusoidal', 'skew', 'slant', 'spheroidal', 'spiral', 'splay', 'squat',
+    'squiggly', 'streamlined', 'swirly', 'symmetrical', 'symmetric', 'tabular', 'tortuous', 'transverse',
+    'trident', 'trilateral', 'truncated', 'truncate', 'tubular', 'undulant', 'undulate', 'vaulted', 'vertical'
   ],
   color: [
     'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'gray',
