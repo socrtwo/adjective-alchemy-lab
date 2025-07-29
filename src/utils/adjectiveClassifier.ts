@@ -779,7 +779,22 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'denim', 'canvas', 'vinyl', 'foam', 'bamboo', 'cork', 'wicker', 'rattan', 'clay', 'porcelain',
     'embroidered', 'woven', 'knitted', 'crocheted', 'quilted', 'upholstered', 'lacquered', 'polished',
     'brushed', 'textured', 'smooth', 'rough', 'glossy', 'matte', 'shiny', 'dull', 'transparent', 'opaque',
-    'rusty'
+    'rusty',
+    // Extended material adjectives from user request
+    'acetic', 'acid', 'acrylic', 'alabaster', 'alcoholic', 'alkaline', 'aqueous', 'arsenic', 'aspen',
+    'birch', 'bituminous', 'blubber', 'buckskin', 'cartilaginous', 'cast iron', 'cedar', 'celluloid',
+    'chemical', 'chiffon', 'citric', 'citrus', 'clayey', 'coconut', 'colloid', 'composite', 'compound',
+    'cornmeal', 'crystalline', 'earthen', 'elastic', 'epoxy', 'farinaceous', 'ferric', 'ferrous', 'fibrous',
+    'filamentous', 'filigree', 'fluid', 'fustian', 'gaseous', 'gelatinous', 'gilt', 'glutinous', 'glycogen',
+    'hempen', 'homespun', 'igneous', 'inorganic', 'japan', 'lactic', 'laminate', 'leathery', 'lignite',
+    'liquid', 'loamy', 'material', 'mat', 'membranous', 'mentholated', 'mercuric', 'merino', 'mineral',
+    'nitrogenous', 'nonalcoholic', 'oaken', 'oaten', 'oleaginous', 'organic', 'papery', 'pasteboard',
+    'petrochemical', 'pewter', 'phosphoric', 'plastics', 'polymeric', 'polyunsaturated', 'quicksilver',
+    'resinous', 'rubbery', 'saline', 'salt', 'siliceous', 'silicious', 'silken', 'silkier', 'silkiest',
+    'silky', 'skin', 'solvent', 'sourdough', 'spirituous', 'sterling', 'stoneware', 'sulfuric', 'sulfurous',
+    'sulphuric', 'sulphurous', 'synthetic', 'talc', 'textile', 'thermoplastic', 'tiled', 'timbered',
+    'tinned', 'tinsel', 'tin', 'troy', 'tweedy', 'twill', 'unleaded', 'unsaturated', 'uric', 'vellum',
+    'velvety', 'vitreous'
   ],
   participle: [
     // Present participles (verb + ing acting as adjectives)
