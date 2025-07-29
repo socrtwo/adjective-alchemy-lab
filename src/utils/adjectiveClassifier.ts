@@ -685,7 +685,7 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'slimmest', 'slim', 'smallish', 'stockier', 'stockiest', 'stocky', 'stout', 'strapping', 'stubby',
     'stumpier', 'stumpiest', 'stumpy', 'stupendous', 'subatomic', 'teenier', 'teeniest', 'teensy',
     'teeny', 'thickset', 'tinier', 'tiniest', 'titanic', 'towering', 'tubbier', 'tubbiest', 'tubby',
-    'undersized', 'undersize', 'underweight'
+    'undersized', 'undersize', 'underweight', 'wide'
   ],
   age: [
     'old', 'new', 'ancient', 'modern', 'young', 'elderly', 'aged', 'fresh', 'recent', 'contemporary',
