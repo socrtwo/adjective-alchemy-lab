@@ -691,7 +691,24 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
     'old', 'new', 'ancient', 'modern', 'young', 'elderly', 'aged', 'fresh', 'recent', 'contemporary',
     'vintage', 'antique', 'historic', 'prehistoric', 'medieval', 'current', 'outdated', 'obsolete',
     'brand-new', 'secondhand', 'used', 'original', 'latest', 'former', 'previous', 'future', 'past',
-    'present', 'archaic', 'primitive', 'advanced', 'cutting-edge', 'state-of-the-art'
+    'present', 'archaic', 'primitive', 'advanced', 'cutting-edge', 'state-of-the-art',
+    // Extended age adjectives from user request
+    'adolescent', 'adult', 'after', 'ageless', 'ancestral', 'annual', 'antebellum', 'antecedent',
+    'antediluvian', 'antiquated', 'autumnal', 'baby', 'biannual', 'bicentennial', 'biennial', 'bimonthly',
+    'biweekly', 'bygone', 'centenarian', 'centenary', 'centennial', 'coeval', 'contemporaneous', 'daily',
+    'dated', 'earliest', 'early', 'elder', 'eldest', 'embryonic', 'epochal', 'erstwhile', 'eternal',
+    'eventual', 'everlasting', 'everyday', 'fortnightly', 'freshman', 'heretofore', 'hourly', 'immature',
+    'immemorial', 'infantile', 'infant', 'interim', 'junior', 'juvenile', 'larval', 'lasting', 'later',
+    'late', 'latter', 'lifelong', 'livelong', 'longtime', 'mature', 'mediaeval', 'millennial', 'momentary',
+    'monthly', 'nascent', 'neonatal', 'newborn', 'newfangled', 'nightly', 'nonagenarian', 'novel',
+    'obsolescent', 'octogenarian', 'olden', 'older', 'oldest', 'out of date', 'outmoded', 'outworn',
+    'overage', 'overnight', 'perennial', 'periodic', 'permanent', 'perpetual', 'posthumous', 'precedent',
+    'preceding', 'premature', 'preschool', 'prewar', 'primaeval', 'primeval', 'primordial', 'prior',
+    'pubescent', 'quadrennial', 'quarterly', 'quondam', 'quotidian', 'reborn', 'seasonal', 'semiannual',
+    'semimonthly', 'semiweekly', 'senile', 'senior', 'septuagenarian', 'sexagenarian', 'sometime',
+    'space age', 'split second', 'stale', 'stillborn', 'subsequent', 'superannuated', 'teenage', 'teen',
+    'temporary', 'tercentenary', 'then', 'timeless', 'timely', 'timeworn', 'traditional', 'transient',
+    'transitory', 'triennial', 'unborn', 'undated', 'underage', 'unprecedented', 'untimely', 'venerable'
   ],
   shape: [
     'round', 'square', 'flat', 'curved', 'straight', 'circular', 'rectangular', 'triangular', 'oval',
