@@ -775,6 +775,11 @@ const ADJECTIVE_DATABASE: Record<AdjectiveCategory, string[]> = {
 	'voluntary', 'voluptuous', 'voracious', 'vulgar', 'vulnerable', 'vying', 'wackier', 'wackiest', 'wacky', 
 	'waggish', 'wakeful', 'weak', 'wise', 'wonderful', 'worn'
   ],
+  size: [
+	'big', 'colossal', 'diminutive', 'enormous', 'gargantuan', 'giant', 'gigantic', 'huge', 'immense', 'infinitesimal', 
+	'large', 'little', 'mammoth', 'massive', 'microscopic', 'miniature', 'minuscule', 'petite', 'prodigious', 'small', 
+	'tiny', 'tremendous', 'vast', 'wee'
+  ],
   age: [
 	'adolescent', 'adult', 'advanced', 'after', 'aged', 'ageless', 'ancestral', 'ancient', 'annual', 
 	'antebellum', 'antecedent', 'antediluvian', 'antiquated', 'antique', 'archaic', 'autumnal', 'baby', 
@@ -1585,12 +1590,12 @@ export class AdjectiveClassifier {
 	this.database = Object.entries(ADJECTIVE_DATABASE).reduce((acc, [category, words]) => {
 	  acc[category as AdjectiveCategory] = new Set(words.map(word => word.toLowerCase()));
 	  return acc;
-djectiveCategory, Set<string>);
+	}, {} as Record<AdjectiveCategory, Set<string>>);
 
 	this.adverbDatabase = Object.entries(ADVERB_DATABASE).reduce((acc, [category, words]) => {
 	  acc[category as AdverbCategory] = new Set(words.map(word => word.toLowerCase()));
 	  return acc;
-	}, {} as Record<AdverbCategory, Set<string>);
+	}, {} as Record<AdverbCategory, Set<string>>);
   }
 
   classifyAdjective(word: string): AdjectiveCategory | null {
