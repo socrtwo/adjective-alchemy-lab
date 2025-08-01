@@ -1585,7 +1585,7 @@ export class AdjectiveClassifier {
 	this.database = Object.entries(ADJECTIVE_DATABASE).reduce((acc, [category, words]) => {
 	  acc[category as AdjectiveCategory] = new Set(words.map(word => word.toLowerCase()));
 	  return acc;
-djectiveCategory, Set<string>>);
+djectiveCategory, Set<string>);
 
 	this.adverbDatabase = Object.entries(ADVERB_DATABASE).reduce((acc, [category, words]) => {
 	  acc[category as AdverbCategory] = new Set(words.map(word => word.toLowerCase()));
