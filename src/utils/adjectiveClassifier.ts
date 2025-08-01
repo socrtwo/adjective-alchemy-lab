@@ -1590,7 +1590,7 @@ djectiveCategory, Set<string>>);
 	this.adverbDatabase = Object.entries(ADVERB_DATABASE).reduce((acc, [category, words]) => {
 	  acc[category as AdverbCategory] = new Set(words.map(word => word.toLowerCase()));
 	  return acc;
-	}, {} as Record<AdverbCategory, Set<string>>);
+	}, {} as Record<AdverbCategory, Set<string>);
   }
 
   classifyAdjective(word: string): AdjectiveCategory | null {
