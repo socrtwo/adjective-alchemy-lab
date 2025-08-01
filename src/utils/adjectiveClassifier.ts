@@ -1625,39 +1625,83 @@ export class AdjectiveClassifier {
   }
 
   extractAdjectives(sentence: string): string[] {
-	// Enhanced word extraction with better noun-adjective position analysis
-	const words = sentence.toLowerCase().match(/\b[a-z]+\b/g) || [];
-	const foundAdjectives: string[] = [];
-	
-	// Check each word for direct match in database
-	words.forEach((word, index) => {
-	  if (CATEGORY_ORDER.some(category => this.database[category].has(word))) {
-		foundAdjectives.push(word);
-	  }
-	});
-	
-	// Additional pattern matching for adjectives that might appear after nouns
-	// Look for patterns like "bottle perfume" -> "perfume bottle"
-	for (let i = 0; i < words.length - 1; i++) {
-	  const currentWord = words[i];
-	  const nextWord = words[i + 1];
-	  
-	  // Check if current word could be a noun and next word is an adjective
-	  if (this.isPotentialNoun(currentWord) && this.classifyAdjective(nextWord)) {
-		if (!foundAdjectives.includes(nextWord)) {
-		  foundAdjectives.push(nextWord);
-		}
-	  }
-	}
-	
-	return foundAdjectives;
+    // Enhanced word extraction with better noun-adjective position analysis
+    const words = sentence.toLowerCase().match(/\b[a-z]+\b/g) || [];
+    const foundAdjectives: string[] = [];
+    
+    // Check each word for direct match in database
+    words.forEach((word, index) => {
+      if (CATEGORY_ORDER.some(category => this.database[category].has(word))) {
+        foundAdjectives.push(word);
+      }
+    });
+    
+    // Look for potential unknown adjectives using linguistic patterns
+    words.forEach((word, index) => {
+      // Skip if already found
+      if (foundAdjectives.includes(word)) return;
+      
+      // Check if word appears to be an adjective based on context and patterns
+      if (this.isPotentialUnknownAdjective(word, words, index)) {
+        foundAdjectives.push(word);
+      }
+    });
+    
+    // Additional pattern matching for adjectives that might appear after nouns
+    // Look for patterns like "bottle perfume" -> "perfume bottle"
+    for (let i = 0; i < words.length - 1; i++) {
+      const currentWord = words[i];
+      const nextWord = words[i + 1];
+      
+      // Check if current word could be a noun and next word is an adjective
+      if (this.isPotentialNoun(currentWord) && this.classifyAdjective(nextWord)) {
+        if (!foundAdjectives.includes(nextWord)) {
+          foundAdjectives.push(nextWord);
+        }
+      }
+    }
+    
+    return foundAdjectives;
   }
 
   private isPotentialNoun(word: string): boolean {
-	// Simple heuristic to identify potential nouns
-	const commonNouns = ['bottle', 'box', 'chest', 'sign', 'floor', 'window', 'vase', 'earrings', 'coins', 'scarves', 'tablecloths', 'candlesticks'];
-	return commonNouns.includes(word.toLowerCase()) || 
-		   (word.length > 3 && !word.endsWith('ly') && !word.endsWith('ing'));
+    // Simple heuristic to identify potential nouns
+    const commonNouns = ['bottle', 'box', 'chest', 'sign', 'floor', 'window', 'vase', 'earrings', 'coins', 'scarves', 'tablecloths', 'candlesticks'];
+    return commonNouns.includes(word.toLowerCase()) || 
+           (word.length > 3 && !word.endsWith('ly') && !word.endsWith('ing'));
+  }
+
+  private isPotentialUnknownAdjective(word: string, words: string[], index: number): boolean {
+    // Skip very short words, articles, pronouns, verbs, adverbs
+    if (word.length < 3 || 
+        ['the', 'and', 'but', 'for', 'are', 'was', 'his', 'her', 'its', 'you', 'can', 'had', 'not'].includes(word) ||
+        word.endsWith('ly') || 
+        word.endsWith('ing') || 
+        word.endsWith('ed')) {
+      return false;
+    }
+
+    // Check positional context - adjectives often appear before nouns
+    if (index < words.length - 1) {
+      const nextWord = words[index + 1];
+      // If next word appears to be a noun, current word might be an adjective
+      if (this.isPotentialNoun(nextWord)) {
+        return true;
+      }
+    }
+
+    // Check if word appears in adjective chains (multiple adjectives in sequence)
+    let hasAdjacentAdjective = false;
+    if (index > 0) {
+      const prevWord = words[index - 1];
+      hasAdjacentAdjective = this.classifyAdjective(prevWord) !== null;
+    }
+    if (index < words.length - 1) {
+      const nextWord = words[index + 1];
+      hasAdjacentAdjective = hasAdjacentAdjective || this.classifyAdjective(nextWord) !== null;
+    }
+
+    return hasAdjacentAdjective;
   }
 
   extractAdverbs(sentence: string): string[] {
@@ -1669,20 +1713,31 @@ export class AdjectiveClassifier {
   }
 
   analyzeSentence(sentence: string): AdjectiveClassification[] {
-	const adjectives = this.extractAdjectives(sentence);
-	const words = sentence.toLowerCase().split(/\s+/);
-	
-	return adjectives.map(adjective => {
-	  const category = this.classifyAdjective(adjective);
-	  const position = words.indexOf(adjective.toLowerCase());
-	  
-	  return {
-		word: adjective,
-		category: category!,
-		position,
-		confidence: 1.0 // In a real implementation, this could be calculated
-	  };
-	}).filter(classification => classification.category !== null);
+    const adjectives = this.extractAdjectives(sentence);
+    const words = sentence.toLowerCase().split(/\s+/);
+    
+    return adjectives.map(adjective => {
+      const category = this.classifyAdjective(adjective);
+      const position = words.indexOf(adjective.toLowerCase());
+      
+      if (category === null) {
+        // Unknown adjective - mark for manual classification
+        return {
+          word: adjective,
+          category: 'unknown' as const,
+          position,
+          confidence: 0.0,
+          needsManualClassification: true
+        };
+      }
+      
+      return {
+        word: adjective,
+        category,
+        position,
+        confidence: 1.0
+      };
+    });
   }
 
   analyzeAdverbs(sentence: string): AdverbClassification[] {
@@ -1766,6 +1821,8 @@ export class AdjectiveClassifier {
 	// Process each chain separately
 	for (const chain of chains) {
 	  const sortedChain = [...chain.adjectives].sort((a, b) => {
+		// Skip sorting for unknown categories - leave them in original position
+		if (a.category === 'unknown' || b.category === 'unknown') return 0;
 		const aIndex = CATEGORY_ORDER.indexOf(a.category);
 		const bIndex = CATEGORY_ORDER.indexOf(b.category);
 		return aIndex - bIndex;
@@ -1871,18 +1928,23 @@ export class AdjectiveClassifier {
   }
 
   reorderAdverbs(sentence: string): { 
-	original: string; 
-	corrected: string; 
-	changes: boolean;
-	totalAdverbs: number;
-	reorderedAdverbs: number;
-	adverbChains: number;
-	reorderedChains: number;
+    original: string; 
+    corrected: string; 
+    changes: boolean;
+    totalAdverbs: number;
+    reorderedAdverbs: number;
+    adverbChains: number;
+    reorderedChains: number;
   } {
-	const words = sentence.split(/\s+/);
-	const adverbs = this.analyzeAdverbs(sentence);
-	const chains = findAdverbChains(sentence, adverbs);
-	
-	return reorderAdverbs(sentence, adverbs, chains);
+    const words = sentence.split(/\s+/);
+    const adverbs = this.analyzeAdverbs(sentence);
+    const chains = findAdverbChains(sentence, adverbs);
+    
+    return reorderAdverbs(sentence, adverbs, chains);
+  }
+
+  addUserClassification(word: string, category: AdjectiveCategory): void {
+    // Add the word to the appropriate category in the database
+    this.database[category].add(word.toLowerCase());
   }
 }

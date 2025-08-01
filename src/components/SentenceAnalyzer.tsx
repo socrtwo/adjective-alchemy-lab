@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AdjectiveClassifier } from '@/utils/adjectiveClassifier';
 import { AdjectiveCategory, CATEGORY_LABELS, ADVERB_LABELS } from '@/types/adjective';
 import { AdjectiveHighlight } from './AdjectiveHighlight';
+import { ManualClassificationDropdown } from './ManualClassificationDropdown';
 import { ArrowRight, Sparkles, CheckCircle, XCircle, BarChart3, FileText, Info, Settings } from 'lucide-react';
 
 interface AnalysisResult {
@@ -53,8 +54,34 @@ export function SentenceAnalyzer() {
   const [activeTab, setActiveTab] = useState('single');
   const [statisticsLevel, setStatisticsLevel] = useState<'none' | 'simple' | 'detailed'>('none');
   const [analysisMode, setAnalysisMode] = useState<'both' | 'adjectives' | 'adverbs'>('both');
+  const [pendingClassifications, setPendingClassifications] = useState<string[]>([]);
+  const [userClassifications, setUserClassifications] = useState<Record<string, AdjectiveCategory>>({});
 
   const classifier = new AdjectiveClassifier();
+
+  const handleManualClassification = (word: string, category: AdjectiveCategory) => {
+    setUserClassifications(prev => ({ ...prev, [word]: category }));
+    setPendingClassifications(prev => prev.filter(w => w !== word));
+    
+    // Apply classification to classifier
+    classifier.addUserClassification(word, category);
+    
+    // Re-analyze if no more pending classifications
+    const remaining = pendingClassifications.filter(w => w !== word);
+    if (remaining.length === 0) {
+      analyzeSentence();
+    }
+  };
+
+  const handleSkipClassification = (word: string) => {
+    setPendingClassifications(prev => prev.filter(w => w !== word));
+    
+    // Re-analyze if no more pending classifications
+    const remaining = pendingClassifications.filter(w => w !== word);
+    if (remaining.length === 0) {
+      analyzeSentence();
+    }
+  };
 
   const analyzeSentence = async () => {
     if (!inputText.trim()) return;
@@ -70,6 +97,16 @@ export function SentenceAnalyzer() {
     // Get base adjective analysis
     const baseResult = classifier.reorderAdjectives(inputText);
     const adjectives = classifier.analyzeSentence(inputText);
+    
+    // Check for unknown adjectives that need manual classification
+    const unknownAdjectives = adjectives.filter(adj => adj.category === 'unknown' && adj.needsManualClassification);
+    
+    if (unknownAdjectives.length > 0) {
+      // Set pending classifications and stop analysis
+      setPendingClassifications(unknownAdjectives.map(adj => adj.word));
+      setIsAnalyzing(false);
+      return;
+    }
     
     // Initialize result with adjective data
     let result: any = {
@@ -309,6 +346,21 @@ export function SentenceAnalyzer() {
               </Button>
             </div>
           </Card>
+
+          {/* Manual Classification Section */}
+          {pendingClassifications.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-foreground">Manual Classification Required</h3>
+              {pendingClassifications.map((word, index) => (
+                <ManualClassificationDropdown
+                  key={`${word}-${index}`}
+                  word={word}
+                  onClassify={handleManualClassification}
+                  onSkip={handleSkipClassification}
+                />
+              ))}
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="bulk" className="space-y-6">

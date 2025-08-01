@@ -18,9 +18,10 @@ export type AdverbCategory =
 
 export interface AdjectiveClassification {
   word: string;
-  category: AdjectiveCategory;
+  category: AdjectiveCategory | 'unknown';
   position: number;
   confidence?: number;
+  needsManualClassification?: boolean;
 }
 
 export interface AdverbClassification {
