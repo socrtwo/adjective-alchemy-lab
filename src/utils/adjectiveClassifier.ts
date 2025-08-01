@@ -1629,10 +1629,14 @@ export class AdjectiveClassifier {
     const words = sentence.toLowerCase().match(/\b[a-z]+\b/g) || [];
     const foundAdjectives: string[] = [];
     
+    console.log('Debug: Analyzing sentence:', sentence);
+    console.log('Debug: Words found:', words);
+    
     // Check each word for direct match in database
     words.forEach((word, index) => {
       if (CATEGORY_ORDER.some(category => this.database[category].has(word))) {
         foundAdjectives.push(word);
+        console.log('Debug: Found known adjective:', word);
       }
     });
     
@@ -1642,8 +1646,12 @@ export class AdjectiveClassifier {
       if (foundAdjectives.includes(word)) return;
       
       // Check if word appears to be an adjective based on context and patterns
-      if (this.isPotentialUnknownAdjective(word, words, index)) {
+      const isUnknownAdjective = this.isPotentialUnknownAdjective(word, words, index);
+      console.log(`Debug: Checking if "${word}" is potential unknown adjective:`, isUnknownAdjective);
+      
+      if (isUnknownAdjective) {
         foundAdjectives.push(word);
+        console.log('Debug: Added unknown adjective:', word);
       }
     });
     
@@ -1661,32 +1669,56 @@ export class AdjectiveClassifier {
       }
     }
     
+    console.log('Debug: Final adjectives found:', foundAdjectives);
     return foundAdjectives;
   }
 
   private isPotentialNoun(word: string): boolean {
+    // First check if it's a known adjective - if so, it's NOT a noun
+    if (this.classifyAdjective(word) !== null) {
+      return false;
+    }
+    
     // Simple heuristic to identify potential nouns
-    const commonNouns = ['bottle', 'box', 'chest', 'sign', 'floor', 'window', 'vase', 'earrings', 'coins', 'scarves', 'tablecloths', 'candlesticks'];
+    const commonNouns = ['bottle', 'box', 'chest', 'sign', 'floor', 'window', 'vase', 'earrings', 'coins', 'scarves', 'tablecloths', 'candlesticks', 'substance', 'collection', 'bottles', 'caps', 'light', 'energy', 'room', 'presence', 'surface', 'liquid'];
     return commonNouns.includes(word.toLowerCase()) || 
-           (word.length > 3 && !word.endsWith('ly') && !word.endsWith('ing'));
+           (word.length > 3 && !word.endsWith('ly') && !word.endsWith('ing') && !word.endsWith('ed'));
   }
 
   private isPotentialUnknownAdjective(word: string, words: string[], index: number): boolean {
     // Skip very short words, articles, pronouns, verbs, adverbs
     if (word.length < 3 || 
-        ['the', 'and', 'but', 'for', 'are', 'was', 'his', 'her', 'its', 'you', 'can', 'had', 'not'].includes(word) ||
+        ['the', 'and', 'but', 'for', 'are', 'was', 'his', 'her', 'its', 'you', 'can', 'had', 'not', 'she', 'he', 'they', 'with', 'that', 'sat', 'one'].includes(word.toLowerCase()) ||
         word.endsWith('ly') || 
         word.endsWith('ing') || 
         word.endsWith('ed')) {
       return false;
     }
 
+    // Check for common adjective patterns/suffixes
+    const adjectivePatterns = [
+      /ian$/i,    // Victorian, Italian, etc.
+      /an$/i,     // American, urban, etc.
+      /ous$/i,    // famous, precious, etc.
+      /ful$/i,    // beautiful, useful, etc.
+      /ish$/i,    // reddish, foolish, etc.
+      /ive$/i,    // active, creative, etc.
+      /al$/i,     // musical, natural, etc.
+      /ic$/i,     // classic, magic, etc.
+      /ine$/i,    // marine, divine, etc.
+      /ent$/i,    // different, excellent, etc.
+      /ant$/i,    // important, distant, etc.
+    ];
+    
+    const hasAdjectivePattern = adjectivePatterns.some(pattern => pattern.test(word));
+
     // Check positional context - adjectives often appear before nouns
+    let isBeforeNoun = false;
     if (index < words.length - 1) {
       const nextWord = words[index + 1];
       // If next word appears to be a noun, current word might be an adjective
       if (this.isPotentialNoun(nextWord)) {
-        return true;
+        isBeforeNoun = true;
       }
     }
 
@@ -1701,7 +1733,8 @@ export class AdjectiveClassifier {
       hasAdjacentAdjective = hasAdjacentAdjective || this.classifyAdjective(nextWord) !== null;
     }
 
-    return hasAdjacentAdjective;
+    // Return true if word has adjective pattern AND (is before a noun OR is adjacent to known adjectives)
+    return hasAdjectivePattern && (isBeforeNoun || hasAdjacentAdjective);
   }
 
   extractAdverbs(sentence: string): string[] {
