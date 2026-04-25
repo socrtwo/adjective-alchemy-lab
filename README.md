@@ -1,5 +1,10 @@
 # Welcome to your Lovable project
 
+<!--PAGES_LINK_BANNER-->
+> 🌐 **Live page:** [https://socrtwo.github.io/adjective-alchemy-lab/](https://socrtwo.github.io/adjective-alchemy-lab/)  
+> 📦 **Releases:** [github.com/socrtwo/adjective-alchemy-lab/releases](https://github.com/socrtwo/adjective-alchemy-lab/releases)
+<!--/PAGES_LINK_BANNER-->
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/cb0fd3e2-2a6e-4455-b424-124f0022f051
